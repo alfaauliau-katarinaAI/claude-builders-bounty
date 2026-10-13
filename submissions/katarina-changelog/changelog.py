@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """Generate a deterministic, categorized changelog using Git and Python stdlib."""
 import argparse
+import os
 import pathlib
 import re
 import subprocess
 import sys
+import tempfile
 
 
 def git(repo, *args, check=True):
-    result = subprocess.run(["git", "-C", str(repo), *args], capture_output=True, text=True)
+    result = subprocess.run(["git", "-C", str(repo), *args], capture_output=True, text=True, encoding="utf-8")
     if check and result.returncode:
         raise ValueError(result.stderr.strip() or "Git command failed")
     return result
@@ -59,7 +61,18 @@ def main():
                 return 0
             raise ValueError("Output exists with different contents; use another --output or --overwrite.")
         output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(content, encoding="utf-8")
+        # Replace atomically so interrupted writes never leave a partial changelog.
+        temporary = None
+        try:
+            with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=output.parent, delete=False) as handle:
+                temporary = pathlib.Path(handle.name)
+                handle.write(content)
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temporary, output)
+        finally:
+            if temporary is not None:
+                temporary.unlink(missing_ok=True)
         print(f"Wrote {output}")
         return 0
     except (ValueError, OSError) as error:
