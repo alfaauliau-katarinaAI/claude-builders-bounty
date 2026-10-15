@@ -44,7 +44,10 @@
       "name": "Fetch Commits",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": 720,
+      "position": [
+        720,
+        280
+      ],
       "parameters": {
         "method": "GET",
         "url": "={{ 'https://api.github.com/repos/' + $('Setup').first().json.owner + '/' + $('Setup').first().json.repo + '/commits?per_page=100&since=' + encodeURIComponent($('Setup').first().json.since) + '&until=' + encodeURIComponent($('Setup').first().json.until) }}",
@@ -73,7 +76,10 @@
       "name": "Fetch Closed Issues",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": 960,
+      "position": [
+        960,
+        280
+      ],
       "parameters": {
         "method": "GET",
         "url": "={{ 'https://api.github.com/repos/' + $('Setup').first().json.owner + '/' + $('Setup').first().json.repo + '/issues?state=closed&per_page=100&since=' + encodeURIComponent($('Setup').first().json.since) }}",
@@ -102,7 +108,10 @@
       "name": "Fetch Closed PRs",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": 1200,
+      "position": [
+        1200,
+        280
+      ],
       "parameters": {
         "method": "GET",
         "url": "={{ 'https://api.github.com/repos/' + $('Setup').first().json.owner + '/' + $('Setup').first().json.repo + '/pulls?state=closed&sort=updated&direction=desc&per_page=100 }}",
