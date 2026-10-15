@@ -62,6 +62,11 @@ class ReviewTests(unittest.TestCase):
         with patch.object(r, "http_json", return_value=model) as api:
             review = r.review_with_claude({"diff": "safe"}, "test-only", "claude-test")
         self.assertEqual(review["confidence"], "High")
+        # An incomplete review input must never claim high confidence.
+        with patch.object(r, "http_json", return_value=model):
+            incomplete = r.review_with_claude({"diff": "cut", "truncated": True},
+                                             "test-only", "claude-test")
+        self.assertEqual(incomplete["confidence"], "Low")
         self.assertTrue(api.call_args.kwargs["anthropic"])
         self.assertIn("### Confidence", r.format_review(review, "https://github.com/o/r/pull/7"))
 
