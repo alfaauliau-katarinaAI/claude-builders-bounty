@@ -8,6 +8,11 @@ const vm = require('node:vm');
 const wf = JSON.parse(fs.readFileSync(path.join(__dirname, 'workflow.json'), 'utf8'));
 const nodes = new Map(wf.nodes.map(node => [node.name, node]));
 assert.equal(nodes.size, 8);
+for (const node of wf.nodes) {
+  assert.equal(Array.isArray(node.position), true, node.name + ': position must be XY pair');
+  assert.equal(node.position.length, 2, node.name + ': position must have two entries');
+  for (const coordinate of node.position) assert.equal(Number.isFinite(coordinate), true);
+}
 assert.equal(wf.settings.timezone, 'Asia/Jakarta');
 assert.equal(wf.active, false);
 assert.equal(nodes.get('Weekly Schedule').parameters.rule.interval[0].field, 'weeks');
