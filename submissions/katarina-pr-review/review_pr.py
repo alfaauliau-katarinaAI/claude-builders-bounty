@@ -120,7 +120,11 @@ def review_with_claude(pr, api_key, model):
                        if block.get("type") == "text")
     if not output.strip():
         raise ValueError("No model output")
-    return normalize_review(output)
+    review = normalize_review(output)
+    # The model's self-reported confidence cannot override incomplete input.
+    if pr.get("truncated"):
+        review["confidence"] = "Low"
+    return review
 
 
 def main(argv=None):
