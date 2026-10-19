@@ -4,13 +4,14 @@ A dependency-free Python CLI that fetches a GitHub pull request's changed-file p
 
 ## Setup and usage
 
-1. Install Python 3.9+; export ANTHROPIC_API_KEY in your terminal. For GitHub private repos and optional posting, also export GITHUB_TOKEN (fine-grained token with pull-request read and issue-comment write permissions).
-2. From this directory, run:
+1. Install Python 3.9+, then from this directory run `python3 -m pip install .` to install the **`claude-review`** CLI entry point (or `python3 -m pip install -e .` for local development).
+2. Export `ANTHROPIC_API_KEY` in your terminal. For GitHub private repos and optional posting, also export `GITHUB_TOKEN` (fine-grained token with pull-request read and issue-comment write permissions).
+3. Run:
 
-   python3 review_pr.py --pr https://github.com/claude-builders-bounty/claude-builders-bounty/pull/4810
+   claude-review --pr https://github.com/claude-builders-bounty/claude-builders-bounty/pull/4810
 
-3. Review the generated output. To publish it, explicitly run the same command with --post. Only the review is posted; no code is changed.
-4. Offline tests: python3 -m unittest discover -s . -p "test_review_pr.py" -v
+   Without installation, use `python3 review_pr.py --pr https://github.com/claude-builders-bounty/claude-builders-bounty/pull/4810` from this directory.
+4. Review the generated output. To publish it, add `--post` explicitly. Only the review is posted; no code is changed. Offline tests: `python3 -m unittest discover -s . -p "test_review_pr.py" -v`.
 
 ## Output
 
