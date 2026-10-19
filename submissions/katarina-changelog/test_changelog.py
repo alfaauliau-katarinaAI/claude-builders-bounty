@@ -1,5 +1,6 @@
 import importlib.util
 import pathlib
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -64,6 +65,7 @@ class ChangelogTests(unittest.TestCase):
         self.assertIn("\\[danger\\]", output)
         self.assertIn("\\*star\\*", output)
 
+    @unittest.skipUnless(shutil.which('bash'), 'Bash is not installed on this host; the Bash entry point is exercised on Linux CI')
     def test_bash_entrypoint_preserves_existing_output(self):
         self.commit("feat: first")
         command = ["bash", str(BASE / "changelog.sh"), "--repo", str(self.repo)]
